@@ -5,7 +5,7 @@ class Subject{ // 被观察者
         this.state = '开心';
     }
     attach(observer){
-        // 观察者和被观察者中，这个attach就是调度中心
+        // 观察者和被观察者中，将观察者放入被观察者中，观察者和被观察者直接进行交互
         this.stack.push(observer);
     }
     setState(newState){
