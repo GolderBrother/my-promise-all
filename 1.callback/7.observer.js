@@ -1,9 +1,11 @@
 // 观察者模式 
 class Subject{ // 被观察者
     constructor(){
-        this.stack = [];this.state = '开心'
+        this.stack = [];
+        this.state = '开心';
     }
     attach(observer){
+        // 观察者和被观察者中，这个attach就是调度中心
         this.stack.push(observer);
     }
     setState(newState){
