@@ -9,11 +9,15 @@ function isType(type){ // 变量
 // isString isArray isBoolean
 let types = ['String','Boolean','Number','Null','Undefined'];
 let utils = {}
-for(let i = 0 ; i< types.length;i++){
-    let type = types[i]
-    utils['is'+type] = isType(type);
+for(let type of types) {
     // utils.isString = function 预制参数 和 bind一样
+    utils['is'+type] = isType(type);
 }
+// for(let i = 0 ; i< types.length;i++){
+//     let type = types[i]
+//     utils['is'+type] = isType(type);
+//     // utils.isString = function 预制参数 和 bind一样
+// }
 let flag = utils.isString('hello');
 console.log(flag);
 
