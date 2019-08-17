@@ -89,8 +89,8 @@ co(read()).then(data=>{
 // })
 
 
-
-// async + await koa + async + await
+// async + await 
+// koa2： async + await
 // react
 // 语法糖
 // fs的promise版本
@@ -120,17 +120,35 @@ let r = await read();
 console.log(r); // 100
 
 // generator-runtime搜索 generator简单实现
-// async + await 就是 generator + co 库
+// co作者：史诗级大神tj
+
+// async和await如何捕获，两种方法
+// async function test(){
+// // 	TODO
+// }
+// 第一种:
+// test.then(data => data, err => err)
+
+// 第二种：
+// async function test(){
+//     try{
+// 	    // TODO
+//     }catch(err) {
+// 	    console.log(err);
+//     }
+// }
+
+// async函数是基于generator的
+// async + await 其实是 generator + co的语法糖
 
 
 // 回调 -> promise -> generator -> async + await
 
-
-
-// 作业 1: 柯理化  反柯理化  
+// 作业
+// 1) 柯理化  反柯理化  
 // 2) Promise.try()是如何实现的
 // https://www.jianshu.com/p/0669749eff8f
-// 3） 整理一下 讲过的所有的promise方法
+// 3) 整理一下 讲过的所有的promise方法
 // 练习
 
 
