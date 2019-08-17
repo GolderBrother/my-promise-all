@@ -1,4 +1,4 @@
-// 观察者模式 
+// 观察者模式, vue 就是典型的观察者模式，内部创建了很多个watcher 
 class Subject{ // 被观察者
     constructor(){
         this.stack = [];
