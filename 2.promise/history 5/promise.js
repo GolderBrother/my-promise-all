@@ -1,6 +1,7 @@
 const PENDING = "PENDING";
 const SUCCESS = "FULFILLED";
 const FAIL = "REJECTED";
+// Promise A+ 规范：https://promisesaplus.com/
 // 需要来个方法来处理.then方法的返回值
 // Promise Resolution Procedure
 // resolvePromise
@@ -11,6 +12,14 @@ const FAIL = "REJECTED";
 // (3).then方法返回的不是this，也就不是之前的promise，所以必须返回一个新的Promise
 // promise2是.then方法执行完返回的那个新的promise，x 是then方法里面的返回值 
 // 严谨 应该判断 别人的promise 如果失败了就不能在调用成功 如果成功了不能在调用失败
+
+// let obj = {};
+// Object.defineProperty(obj, then, {
+//     get(){
+//     	throw new Error('失败')
+//     }
+// })
+
 function resolvePromise(promise2, x,resolve,reject) { 
     if(promise2 === x){
        // 自己等自己，死循环
@@ -18,7 +27,8 @@ function resolvePromise(promise2, x,resolve,reject) {
     }
     let called;
     if(typeof x === 'function' || (typeof x === 'object' && x !== null)){
-      try{
+      try{    
+        // If retrieving the property x.then results in a thrown exception e, reject promise with e as the reason
         let then = x.then;  // then 可能是getter object.defineProperty
         if(typeof then === 'function'){  // {then:null}
            then.call(x,y=>{ 
