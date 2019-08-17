@@ -1,7 +1,7 @@
 const PENDING = "PENDING";
 const SUCCESS = "FULFILLED";
 const FAIL = "REJECTED";
-// 返还的那个新的promise x 是then方法中的返回值 
+// .then方法执行完返回的那个新的promise，x 是then方法里面的返回值 
 function resolvePromise(promise2, x,resolve,reject) { // 考虑的非常全面
     if(promise2 === x){
        return reject(new TypeError('TypeError: Chaining cycle detected for promise #<Promise>'));
