@@ -88,7 +88,6 @@ co(read()).then(data=>{
 //     it.throw(err);
 // })
 
-
 // async + await 
 // koa2： async + await
 // react
@@ -141,8 +140,45 @@ console.log(r); // 100
 // async函数是基于generator的
 // async + await 其实是 generator + co的语法糖
 
-
 // 回调 -> promise -> generator -> async + await
+
+// [...arr] 和 for of 这两种方法，必须要给当前对象，提供一个生层器方法
+// 对象默认没有迭代器，自己实现一个
+// iterator写法
+...{
+    0: 1,
+    1: 2,
+    2: 3,
+    length: 3,
+    [Symbol.iterator](){
+	let len = this.length;
+ 	let index = 0;
+	// 迭代器，是有next方法，而且方法执行后，需要返回value,done
+	return {
+	    next: () => {
+		return {
+		    value: this[index++],
+		    done: index === len + 1
+		}
+	    }
+	}
+    }
+}
+
+// 数组自带迭代器(iterator)
+// generator写法
+...{
+    0: 1,
+    1: 2,
+    2: 3,
+    length: 3,
+    [Symbol.iterator]: function * (){
+       	let index = 0;
+	while(index !== this.length) {
+	    yield index;
+	}
+    }
+}
 
 // 作业
 // 1) 柯理化  反柯理化  
