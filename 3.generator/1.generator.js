@@ -1,4 +1,4 @@
-// 生成器 =》 迭代器的
+// 生成器，用来生成迭代器的
 // 函数 里面的声明 *  yield 来实现
 // 会暂停
 // function * read(){
@@ -45,7 +45,6 @@ function* read() {
     // }
 }
 // co 库
-
 function co(it){
     return new Promise((resolve,reject)=>{
         // 异步迭代 next
@@ -87,10 +86,13 @@ co(read()).then(data=>{
 // react
 // 语法糖
 let fs = require('fs').promises
+// async函数返回的是一个promise
 async function read() {
     try{
+        // await 后面可以跟一个Promise
         let content = await fs.readFile('./name1.txt','utf8');
         let age = await fs.readFile(content,'utf8');
+        // 也可以跟一个普通值
         let r = await 100
         return r;
     }catch(err){
@@ -98,15 +100,20 @@ async function read() {
     }
 }
 // async函数返回的是一个promise
+// .then写法
 read().then(r=>{
-    console.log(r);
+    console.log(r); // 100
 });
+
+// await 写法
+let r = await read();
+console.log(r); // 100
 
 // generator-runtime搜索 generator简单实现
 // async + await 就是 generator + co 库
 
 
-// 回调 -》 promise -》 generator -》 async + await
+// 回调 -> promise -> generator -> async + await
 
 
 
