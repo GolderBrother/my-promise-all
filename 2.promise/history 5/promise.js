@@ -10,7 +10,7 @@ const FAIL = "REJECTED";
 // 成功(resolve态)就走then方法中的成功函数(resolve)
 // 失败(reject态 or throw new Error)就走then方法中的失败函数(reject)
 // (3).then方法返回的不是this，也就不是之前的promise，所以必须返回一个新的Promise
-// promise2是.then方法执行完返回的那个新的promise，x 是then方法里面的返回值 
+// promise2是.then方法执行完返回的那个新的promise，x 是then方法里面的返回值（上一个Promise的值） 
 // 严谨 应该判断 别人的promise 如果失败了就不能在调用成功 如果成功了不能在调用失败
 
 // let obj = {};
@@ -25,20 +25,25 @@ function resolvePromise(promise2, x,resolve,reject) {
        // 自己等自己，死循环
        return reject(new TypeError('TypeError: Chaining cycle detected for promise #<Promise>'));
     }
-    let called;
+    let called; // 防止called被调用多次
     if(typeof x === 'function' || (typeof x === 'object' && x !== null)){
       try{    
         // If retrieving the property x.then results in a thrown exception e, reject promise with e as the reason
         let then = x.then;  // then 可能是getter object.defineProperty
         if(typeof then === 'function'){  // {then:null}
-           then.call(x,y=>{ 
-             if(called) return; // 1)
+           // If then is a function, call it with x as this, first argument resolvePromise, and second argument rejectPromise
+           // then.call => x.then()  x.then()方法会再取一次then方法，不太好
+           // y => resolve(y) 这里面的y
+           then.call(x,y=>{ // 如果是一个promise，就采用这个promise的结果
+             if(called) return; // 1) 为了辨别这个promise 不能调用多次
              called = true;
-              resolvePromise(promise2,y,resolve,reject); 
-           },r=>{
-             if(called) return; // 2)
+             // If/when resolvePromise is called with a value y, run [[Resolve]](promise, y)
+             resolvePromise(promise2,y,resolve,reject); 
+           },r=>{ // r => reject(r),If/when rejectPromise is called with a reason r, reject promise with r.
+             // 只要调用失败了，就不用管reject(r) 这里面的r值是否为promise,直接失败
+             if(called) return; // 2) 为了辨别这个promise 不能调用多次
              called = true;
-              reject(r);
+             reject(r);
            }) 
         }else{ 
           resolve(x);
@@ -80,11 +85,14 @@ class Promise {
     }
   }
   then(onFulfilled, onRejected) { // .catch(function(){}) .then(null,function)
+  // 可选参数，如果then方法中的两个函数(参数)有传，就用传入的，没传就用默认的
   onFulfilled = typeof onFulfilled === 'function'?onFulfilled:val=>val;
   onRejected =  typeof onRejected === 'function'?onRejected:err=>{throw err}
     let promise2;
+    // 这边 new 的是 自己的 Promise
     promise2 = new Promise((resolve, reject) => {
       if (this.status === SUCCESS) {
+        // 加定时器是为了获取 new Promise之后的 promise2 值
         setTimeout(() => {
           try {
             let x = onFulfilled(this.value);
@@ -141,7 +149,11 @@ Promise.defer = Promise.deferred = function(){
   return dfd;
 }
 module.exports = Promise;
+// 全局安装
 // npm i promises-aplus-tests -g
+
+// 测试
+// promises-aplus-tests myPromise.js
 
 // promise 相关方法
 // generator
