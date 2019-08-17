@@ -1,7 +1,8 @@
 const PENDING = "PENDING";
 const SUCCESS = "FULFILLED";
 const FAIL = "REJECTED";
-// 严谨 🇬应该判断 别人的promise 如果失败了就不能在调用成功 如果成功了不能在调用失败
+// .then方法执行完返回的那个新的promise，x 是then方法里面的返回值 
+// 严谨 应该判断 别人的promise 如果失败了就不能在调用成功 如果成功了不能在调用失败
 function resolvePromise(promise2, x,resolve,reject) { 
     if(promise2 === x){
        return reject(new TypeError('TypeError: Chaining cycle detected for promise #<Promise>'));
