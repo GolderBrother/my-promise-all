@@ -85,3 +85,8 @@ p1.then(data=>{
 // xhr.bort  fetch 方法取消不了
 // generator async + await
 
+// Promise缺点：
+// 没法终止
+// 没法彻底解决回调地域问题
+
+
