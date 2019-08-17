@@ -1,8 +1,7 @@
 const PENDING = "PENDING";
 const SUCCESS = "FULFILLED";
 const FAIL = "REJECTED";
-// promise.then方法的返回值
-// 需要来个方法来解析.then方法的返回值
+// 需要来个方法来处理.then方法的返回值
 // Promise Resolution Procedure
 // resolvePromise
 // (1)普通值表示不是Promise，也不是错误,没有返回值(undefined),也算是普通值
@@ -10,14 +9,15 @@ const FAIL = "REJECTED";
 // 成功(resolve态)就走then方法中的成功函数(resolve)
 // 失败(reject态 or throw new Error)就走then方法中的失败函数(reject)
 // (3).then方法返回的不是this，也就不是之前的promise，所以必须返回一个新的Promise
-// .then方法执行完返回的那个新的promise，x 是then方法里面的返回值 
+// promise2是.then方法执行完返回的那个新的promise，x 是then方法里面的返回值 
 // 严谨 应该判断 别人的promise 如果失败了就不能在调用成功 如果成功了不能在调用失败
 function resolvePromise(promise2, x,resolve,reject) { 
     if(promise2 === x){
+       // 自己等自己，死循环
        return reject(new TypeError('TypeError: Chaining cycle detected for promise #<Promise>'));
     }
     let called;
-    if(typeof x === 'function' || (typeof x === 'object' && x != null)){
+    if(typeof x === 'function' || (typeof x === 'object' && x !== null)){
       try{
         let then = x.then;  // then 可能是getter object.defineProperty
         if(typeof then === 'function'){  // {then:null}
