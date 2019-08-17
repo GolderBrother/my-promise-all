@@ -9,18 +9,19 @@ function isPromise(value){
     }
     return false;
 }
-Promise.all = function(values){
+// 全部成功才成功，有一个失败就失败，并且最后返回一个promise
+Promise.all = function(promises){
     return new Promise((resolve,reject)=>{
         let arr = []; // arr[3] = 2  arr.length = 4
         let i = 0;
         let processData = (key,value)=>{
             arr[key] = value; // after函数
-            if(++i === values.length){
+            if(++i === promises.length){
                 resolve(arr);
             }
         }
-        for(let i = 0 ; i < values.length;i++){
-            let current = values[i];
+        for(let i = 0 ; i < promises.length;i++){
+            let current = promises[i];
             if(isPromise(current)){
                 current.then(y=>{
                     processData(i,y);
@@ -37,18 +38,19 @@ Promise.all([fs.readFile('./name.txt','utf8'),fs.readFile('./age.txt','utf8'),1,
 // fs.readFile('./name.txt','utf8').then(data=>{
 //     console.log(data);
 // })
-// Promise.race = function(values){
-//     return new Promise((resolve,reject)=>{
-//         for(let i = 0 ; i < values.length;i++){
-//             let current = values[i];
-//             if(isPromise(current)){
-//                 current.then(resolve,reject);
-//             }else{
-//                resolve(current);
-//             }
-//         }
-//     })
-// }
+// 有一个成功就成功，有一个失败就失败，并且最后返回一个promise
+Promise.race = function(promises){
+    return new Promise((resolve,reject)=>{
+        for(let i = 0 ; i < promises.length;i++){
+            let current = promises[i];
+            if(isPromise(current)){
+                current.then(resolve,reject);
+            }else{
+               resolve(current);
+            }
+        }
+    })
+}
 // Promise.race([fs.readFile('./name.tx1t','utf8'),fs.readFile('./age.txt','utf8')]).then(data=>{
 //     console.log(data);
 // },err=>{
