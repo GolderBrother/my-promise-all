@@ -9,7 +9,9 @@ class Subject{ // 被观察者
         this.stack.push(observer);
     }
     setState(newState){
+        // 内部做了订阅，只要有更新状态就更新
         this.state = newState;
+        // 并且通知观察者
         this.stack.forEach(o=>o.update(newState))
     }
 }
