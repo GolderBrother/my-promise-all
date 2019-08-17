@@ -38,6 +38,7 @@ function resolvePromise(promise2, x,resolve,reject) {
              if(called) return; // 1) 为了辨别这个promise 不能调用多次
              called = true;
              // If/when resolvePromise is called with a value y, run [[Resolve]](promise, y)
+             // y有可能也是个promise,需要实现递归解析，直到y为一个常量，然后直接resolve即可
              resolvePromise(promise2,y,resolve,reject); 
            },r=>{ // r => reject(r),If/when rejectPromise is called with a reason r, reject promise with r.
              // 只要调用失败了，就不用管reject(r) 这里面的r值是否为promise,直接失败
@@ -46,6 +47,7 @@ function resolvePromise(promise2, x,resolve,reject) {
              reject(r);
            }) 
         }else{ 
+          // 常量不用判断，因为不会再走reject,直接resolve即可
           resolve(x);
         }
       }catch(e){
@@ -54,6 +56,7 @@ function resolvePromise(promise2, x,resolve,reject) {
         reject(e);
       }
     }else{
+      // 常量不用判断，因为不会再走reject,直接resolve即可
       resolve(x);
     }
 }
