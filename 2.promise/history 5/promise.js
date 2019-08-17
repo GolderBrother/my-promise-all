@@ -1,6 +1,15 @@
 const PENDING = "PENDING";
 const SUCCESS = "FULFILLED";
 const FAIL = "REJECTED";
+// promise.then方法的返回值
+// 需要来个方法来解析.then方法的返回值
+// Promise Resolution Procedure
+// resolvePromise
+// (1)普通值表示不是Promise，也不是错误,没有返回值(undefined),也算是普通值
+// (2)如果返回promise，这个promise会执行，然后会采用他的状态，并返回给外层的then中
+// 成功(resolve态)就走then方法中的成功函数(resolve)
+// 失败(reject态 or throw new Error)就走then方法中的失败函数(reject)
+// (3).then方法返回的不是this，也就不是之前的promise，所以必须返回一个新的Promise
 // .then方法执行完返回的那个新的promise，x 是then方法里面的返回值 
 // 严谨 应该判断 别人的promise 如果失败了就不能在调用成功 如果成功了不能在调用失败
 function resolvePromise(promise2, x,resolve,reject) { 
