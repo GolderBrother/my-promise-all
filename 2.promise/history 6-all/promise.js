@@ -148,15 +148,39 @@ class Promise {
     return this.then(null,errCallback)
   }
 }
+// Promise.resolve = function (value) {
+//     return new Promise((resolve, reject) => {
+//         resolve()
+//     })
+// }
+// Promise.reject = function (reason) {
+//     return new Promise((resolve, reject) => {
+//         reject(reason)
+//     })
+// }
+// Promise.prototype.finally = function (callback) {
+//     // 无论如何finally中传递的回调函数 必须会执行
+//     return this.then(data => {
+//         return Promise.resolve(callback()).then(() => data)
+//     }, reason => {
+//         return Promise.reject(callback()).then(() => {
+//             throw reason
+//         })
+//     })
+// }
+
+
+
 // 希望测试一下这个库是否符合我们的promise A+规范
 // promises-aplus-tests
+// 没人用了
 Promise.defer = Promise.deferred = function(){
-  let dfd = {};
-  dfd.promise = new Promise((resolve,reject)=>{
-    dfd.resolve = resolve;
-    dfd.reject = reject;
+  let defer = {};
+  defer.promise = new Promise((resolve,reject)=>{
+    defer.resolve = resolve;
+    defer.reject = reject;
   });
-  return dfd;
+  return defer;
 }
 // Promise上的静态方法 创建了一个成功的Promise
 Promise.resolve = function(value){
@@ -169,6 +193,40 @@ Promise.reject = function(value){
   return new Promise((resolve,reject)=>{
       reject(value);
   })
+}
+Promise.prototype.catch = function (errorFn) {
+    // catch实际上就是特殊的then方法，只是onfulfilled函数为null，返回 errorFn 错误函数
+    return this.then(null, errorFn);
+}
+// Promise.all 表示全部成功才成功 有任意一个失败 都会失败
+Promise.all = function (promises) {
+    return new Promise((resolve, reject) => {
+        let arr = [],
+            currentIndex = 0;
+
+        function processData(index, value) {
+            arr[index] = value;
+            currentIndex++;
+            if (currentIndex === promises.length) {
+                resolve(arr)
+            }
+        }
+        for (let i in promises) {
+            promises[i].then((data) => {
+                processData(i, data)
+            }, reject)
+        }
+    })
+}
+
+// rece赛跑
+Promise.race = function (promises) {
+    return new Promise((resolve, reject) => {
+        for (let i in promises) {
+            // 并行执行then函数里面的回调，那个先返回结果就返回这个结果
+            promises[i].then(resolve, reject)
+        }
+    })
 }
 // Promise.finally() 最终的，无论如何都执行，如果返回一个promise,会等待这个Promise执行完成
 Promise.prototype.finally = function(callback){
