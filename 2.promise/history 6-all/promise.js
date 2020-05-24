@@ -150,7 +150,7 @@ class Promise {
 }
 // Promise.resolve = function (value) {
 //     return new Promise((resolve, reject) => {
-//         resolve()
+//         resolve(value)
 //     })
 // }
 // Promise.reject = function (reason) {
