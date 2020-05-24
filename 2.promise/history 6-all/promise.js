@@ -34,7 +34,7 @@ function resolvePromise(promise2, x,resolve,reject) {
            // If then is a function, call it with x as this, first argument resolvePromise, and second argument rejectPromise
            // then.call => x.then()  x.then()方法会再取一次then方法，不太好
            // y => resolve(y) 这里面的y
-           then.call(x,y=>{ // 如果是一个promise，就采用这个promise的结果
+           then.call(x,y=>{ // 如果是一个promise，就采用这个promise的结果, 并且使用call绑定x来保证指向返回的x这个Promise实例
              if(called) return; // 1) 为了辨别这个promise 不能调用多次
              called = true;
              // If/when resolvePromise is called with a value y, run [[Resolve]](promise, y)
