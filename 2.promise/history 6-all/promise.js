@@ -245,6 +245,7 @@ Promise.prototype.finally = function(callback){
 // TODO: Promise.try() 可以捕获同步异常和异步异常
 // 希望测试一下这个库是否符合我们的promise A+规范
 // promises-aplus-tests
+// 需要加个 defer, 因为测试的时候会调用这个方法
 Promise.defer = Promise.deferred = function(){
   let dfd = {};
   dfd.promise = new Promise((resolve,reject)=>{
