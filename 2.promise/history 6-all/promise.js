@@ -233,6 +233,7 @@ Promise.race = function (promises) {
 // Promise.finally() 最终的，无论如何都执行，如果返回一个promise,会等待这个Promise执行完成
 Promise.prototype.finally = function(callback){
   return this.then((data)=>{
+      // resolve才会等待promise执行完毕，reject不会
       // 如果then方法返回一个Promise, 就会等待这个方法执行完毕，所以需要包装成Promise才能等待
       return Promise.resolve(callback()).then(()=>data);
       // return new Promise((resolve,reject)=>{
