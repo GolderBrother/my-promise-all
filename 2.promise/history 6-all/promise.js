@@ -13,6 +13,8 @@ const FAIL = "REJECTED";
 // promise2是.then方法执行完返回的那个新的promise，x 是then方法里面的返回值（上一个Promise的值） 
 // 严谨 应该判断 别人的promise 如果失败了就不能在调用成功 如果成功了不能在调用失败
 
+// resolve和reject的区别在于，resolve会等待里面的promise执行完成，reject不会有等待效果
+
 // let obj = {};
 // Object.defineProperty(obj, then, {
 //     get(){
@@ -69,7 +71,7 @@ class Promise {
     this.onRejectedCallbacks = [];
     const resolve = value => { 
       if(value instanceof Promise){ // resolve的结果是一个promise
-         return value.then(resolve,reject); // 那么会让这个promise执行，将执行后的结果在传递给 resolve或者reject中
+         return value.then(resolve,reject); // 那么会让这个promise执行，将执行后的结果在传递给 resolve或者reject中(递归解析resolve中的参数，直到这个值是个普通值)
       }
       if (this.status === PENDING) {
         this.value = value;
