@@ -1,5 +1,5 @@
 const PENDING = "PENDING";
-const SUCCESS = "FULFILLED";
+const SUCCESS = "RESOLVED";
 const FAIL = "REJECTED";
 /* 
 有必要来解释一波 
@@ -67,25 +67,29 @@ function resolvePromise(promise2, x,resolve,reject) {
 }
 class Promise {
   constructor(executor) {
-    this.status = PENDING;
-    this.value = undefined;
-    this.reason = undefined;
-    this.onResolvedCallbacks = [];
-    this.onRejectedCallbacks = [];
+    this.status = PENDING; // Promise的初始状态'PENDING'
+    this.value = undefined; // 成功态的值
+    this.reason = undefined; // 失败态的原因
+    this.onResolvedCallbacks = []; // 存储成功的所有的回调 只有pending的时候才存储
+    this.onRejectedCallbacks = []; // 存储失败的所有的回调 只有pending的时候才存储
     const resolve = value => { 
       if(value instanceof Promise){ // resolve的结果是一个promise
          return value.then(resolve,reject); // 那么会让这个promise执行，将执行后的结果在传递给 resolve或者reject中(递归解析resolve中的参数，直到这个值是个普通值)
       }
+      // 立即执行
       if (this.status === PENDING) {
         this.value = value;
         this.status = SUCCESS;
+        // 取出一个个回调依次执行
         this.onResolvedCallbacks.forEach(fn => fn());
       }
     };
+    // 立即执行
     const reject = reason => {
       if (this.status === PENDING) {
         this.reason = reason;
         this.status = FAIL;
+        // 取出一个个回调依次执行
         this.onRejectedCallbacks.forEach(fn => fn());
       }
     };
