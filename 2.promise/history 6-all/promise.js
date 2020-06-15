@@ -1,27 +1,30 @@
 const PENDING = "PENDING";
 const SUCCESS = "FULFILLED";
 const FAIL = "REJECTED";
-// Promise A+ 规范：https://promisesaplus.com/
-// 需要来个方法来处理.then方法的返回值
-// Promise Resolution Procedure
-// resolvePromise
-// (1)普通值表示不是Promise，也不是错误,没有返回值(undefined),也算是普通值
-// (2)如果返回promise，这个promise会执行，然后会采用他的状态，并返回给外层的then中
-// 成功(resolve态)就走then方法中的成功函数(resolve)
-// 失败(reject态 or throw new Error)就走then方法中的失败函数(reject)
-// (3).then方法返回的不是this，也就不是之前的promise，所以必须返回一个新的Promise
-// promise2是.then方法执行完返回的那个新的promise，x 是then方法里面的返回值（上一个Promise的值） 
+/* 
+有必要来解释一波 
+Promise A+ 规范：https://promisesaplus.com/
+需要来个方法来处理.then方法的返回值
+Promise Resolution Procedure
+resolvePromise
+(1)普通值表示不是Promise，也不是错误,没有返回值(undefined),也算是普通值
+(2)如果返回promise，这个promise会执行，然后会采用他的状态，并返回给外层的then中
+成功(resolve态)就走then方法中的成功函数(resolve)
+失败(reject态 or throw new Error)就走then方法中的失败函数(reject)
+(3).then方法返回的不是this，也就不是之前的promise，所以必须返回一个新的Promise
+promise2是.then方法执行完返回的那个新的promise，x 是then方法中两个函数（resolve和reject）执行的结果（上一个Promise的值）
+
+resolve和reject的区别在于，resolve会等待里面的promise执行完成，reject不会有等待效果
+
+防止别人写了这样的恶意代码
+let obj = {};
+Object.defineProperty(obj, then, {
+  get(){
+    throw new Error('失败')
+  }
+})
+*/
 // 严谨 应该判断 别人的promise 如果失败了就不能在调用成功 如果成功了不能在调用失败
-
-// resolve和reject的区别在于，resolve会等待里面的promise执行完成，reject不会有等待效果
-
-// let obj = {};
-// Object.defineProperty(obj, then, {
-//     get(){
-//     	throw new Error('失败')
-//     }
-// })
-// 严谨 🇬应该判断 别人的promise 如果失败了就不能在调用成功 如果成功了不能在调用失败
 function resolvePromise(promise2, x,resolve,reject) { 
     if(promise2 === x){
        // 自己等自己，死循环
@@ -150,28 +153,6 @@ class Promise {
     return this.then(null,errCallback)
   }
 }
-// Promise.resolve = function (value) {
-//     return new Promise((resolve, reject) => {
-//         resolve(value)
-//     })
-// }
-// Promise.reject = function (reason) {
-//     return new Promise((resolve, reject) => {
-//         reject(reason)
-//     })
-// }
-// Promise.prototype.finally = function (callback) {
-//     // 无论如何finally中传递的回调函数 必须会执行
-//     return this.then(data => {
-//         return Promise.resolve(callback()).then(() => data)
-//     }, reason => {
-//         return Promise.reject(callback()).then(() => {
-//             throw reason
-//         })
-//     })
-// }
-
-
 
 // 希望测试一下这个库是否符合我们的promise A+规范
 // promises-aplus-tests
