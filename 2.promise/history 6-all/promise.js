@@ -30,7 +30,7 @@ function resolvePromise(promise2, x, resolve, reject) {
     // 自己等自己，死循环
     return reject(new TypeError('TypeError: Chaining cycle detected for promise #<Promise>'));
   }
-  let called; // 防止called被调用多次
+  let called; // 防止promise被调用多次
   if (typeof x === 'function' || (typeof x === 'object' && x != null)) {
     try {
       // If retrieving the property x.then results in a thrown exception e, reject promise with e as the reason
