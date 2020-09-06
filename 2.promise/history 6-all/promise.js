@@ -213,7 +213,9 @@ Promise.all = function (promises) {
     return new Promise((resolve, reject) => {
         let arr = [],
             currentIndex = 0;
-
+        function isPromise(p){
+            return p && typeof p.then === 'function';
+        }
         function processData(index, value) {
             arr[index] = value;
             currentIndex++;
@@ -221,15 +223,25 @@ Promise.all = function (promises) {
                 resolve(arr);
             }
         }
-        for (let i in promises) {
-            Promise.resolve(promises[i]).then(data => {
-                processData(i, data);
-            }, reject);
+        for(ley i = 0; i < promises.length; i++) {
+            const p = promises[i];
+            if(isPromise) {
+                p.then(res => 
+                    processData(i, res);
+                });
+            }else {
+               processData(i, p);
+            }
         }
+//         for (let i in promises) {
+//             Promise.resolve(promises[i]).then(data => {
+//                 processData(i, data);
+//             }, reject);
+//         }
     });
 };
 
-// rece赛跑
+// race赛跑
 Promise.race = function (promises) {
     return new Promise((resolve, reject) => {
         for (let i in promises) {
