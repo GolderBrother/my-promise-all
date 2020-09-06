@@ -256,7 +256,7 @@ Promise.prototype.finally = function (callback) {
     return this.then(
         data => {
             // resolve才会等待promise执行完毕，reject不会
-            // 如果then方法返回一个Promise, 就会等待这个方法执行完毕，所以需要包装成Promise才能等待
+            // 如果then方法返回一个Promise, 就会等待这个方法执行完毕，所以需要通过Promise.resolve()包装成Promise才能等待
             return Promise.resolve(callback()).then(() => data);
             // return new Promise((resolve,reject)=>{
             //     resolve(callback()); // 如果callback是一个函数返回promise 就等待这个promise执行完毕
